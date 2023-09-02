@@ -8,6 +8,9 @@ import com.shivbhakt.shivbhakt.repository.ProductRepository;
 import com.shivbhakt.shivbhakt.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +24,7 @@ public class ProductServiceImpl implements ProductService {
     private ModelMapper modelMapper;
     @Autowired
     private CategoryRepository categoryRepository;
+
     @Override
     public ProductDto createProduct(ProductDto productDto,Integer categoryId) {
         Category  category=this.categoryRepository.findById(categoryId).orElseThrow(()->new RuntimeException("category not found with id "));
@@ -79,6 +83,15 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products=this.productRepository.findByTitleContaining(title);
         List<ProductDto> productDtos=products.stream().map(product -> this.modelMapper.map(product,ProductDto.class)).collect(Collectors.toList());
         return productDtos;
+    }
+
+    @Override
+    public List<ProductDto> findPaginated(Integer pageNo, Integer pageSize) {
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        Page<Product> page= this.productRepository.findAll(paging);
+        List<Product> products=page.getContent();
+        List<ProductDto> productDtos=products.stream().map(product -> this.modelMapper.map(product,ProductDto.class)).collect(Collectors.toList());
+        return  productDtos;
     }
 
 

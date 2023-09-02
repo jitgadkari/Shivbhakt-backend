@@ -58,7 +58,8 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto updateComment(CommentDto commentDto,Integer commentId) {
     Comment  comment=this.commentRepository.findById(commentId).orElseThrow(()->new RuntimeException("comment not found with Id"+commentId));
     comment.setComment(commentDto.getComment());
-    CommentDto commentDto1= this.modelMapper.map(comment,CommentDto.class);
+    Comment saveComment=this.commentRepository.save(comment);
+    CommentDto commentDto1= this.modelMapper.map(saveComment,CommentDto.class);
         return commentDto1;
     }
 

@@ -8,6 +8,7 @@ import com.shivbhakt.shivbhakt.service.FileService;
 import com.shivbhakt.shivbhakt.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -76,6 +77,12 @@ public class ProductController {
     public ResponseEntity<List<ProductDto>> searchProducts(@PathVariable String title){
         List<ProductDto> productDtos=this.productService.searchProduct(title);
         return new ResponseEntity<>(productDtos,HttpStatus.OK);
+    }
+
+    @GetMapping("/products/page")
+    public ResponseEntity<List<ProductDto>> pagination(@RequestParam(defaultValue = "0",required = false) Integer pageNo,@RequestParam(defaultValue = "5",required = false)Integer pageSize){
+      List<ProductDto> page= this.productService.findPaginated(pageNo,pageSize);
+      return new ResponseEntity<>(page,HttpStatus.OK);
     }
 
 }

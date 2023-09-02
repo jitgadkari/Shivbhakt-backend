@@ -32,4 +32,9 @@ public class CommentController {
     return new ResponseEntity<>(commentDto1,HttpStatus.OK);
     }
 
+    @DeleteMapping("/comment/{commentId}")
+    public void deleteComment(@PathVariable Integer commentId){
+        this.commentService.deleteComment(commentId);
+    }
+
 }
